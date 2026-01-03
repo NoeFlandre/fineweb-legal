@@ -184,6 +184,21 @@ Training was stopped after epoch 4 as it achieved the best Binary F1@3 score.
 }
 ```
 
+### 3.6 Validation Set Distribution
+
+The 97.99% Binary F1@3 was evaluated on a **held-out validation set of 1,300 samples** (20% stratified split, seed=42):
+
+| Score | Validation Samples | Percentage |
+|-------|-------------------|------------|
+| 0 (Noise) | 499 | 38.4% |
+| 1 (General) | 156 | 12.0% |
+| 2 (Basic) | 115 | 8.8% |
+| 3 (Useful) | 159 | 12.2% |
+| 4 (High Value) | 274 | 21.1% |
+| 5 (Gold) | 97 | 7.5% |
+
+The stratified split ensures the validation set mirrors the training distribution.
+
 ---
 
 ## 4. Inference

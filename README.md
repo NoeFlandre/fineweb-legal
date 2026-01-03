@@ -31,6 +31,8 @@ This project represents the **first version** of the FineWeb-Legal initiative. I
 | **Total Words** | **66.8M** | - |
 | Inference Speed (RTX 3090) | 41.3 samples/sec | - |
 
+*Evaluated on 1,300 held-out validation samples (20% stratified split from 6,500 Mistral-annotated documents).*
+
 ---
 
 ## 📦 Installation
