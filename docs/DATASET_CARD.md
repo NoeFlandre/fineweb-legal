@@ -64,9 +64,16 @@ Along with the dataset, we are releasing the **legal classifier model** used for
 You can load the full dataset (default) or one of the specialized high-quality subsets.
 
 ### Configurations
-*   `default`: All identified legal documents (Score ≥ 3.0). Broadest coverage.
-*   `high_quality`: Strong legal content (Score ≥ 4.0).
-*   `supreme`: **Gold Standard** (Score ≥ 4.8). Highest purity (Supreme Court cases, primary legislation).
+
+| Config | Min Score | Train | Test | Total | Avg Score |
+|--------|-----------|-------|------|-------|-----------|
+| `default` | ≥ 3.0 | 46,918 | 5,214 | **52,132** | 4.21 |
+| `high_quality` | ≥ 4.0 | 29,101 | 3,234 | **32,335** | 4.60 |
+| `supreme` | ≥ 4.8 | 14,971 | 1,664 | **16,635** | 4.98 |
+
+*   `default`: All identified legal documents. Broadest coverage.
+*   `high_quality`: Strong legal content. Case law, statutes, contracts.
+*   `supreme`: **Gold Standard**. Supreme Court opinions, primary legislation.
 
 ### Using `datasets`
 
