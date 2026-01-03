@@ -8,6 +8,7 @@ This project represents the **first version** of the FineWeb-Legal initiative. I
 
 **[📄 Technical Report](docs/TECHNICAL_REPORT.md)** • **[🤗 Dataset Card](docs/DATASET_CARD.md)**
 
+Blog : https://noeflandre.bearblog.dev/i-made-a-legal-dataset-and-put-it-on-the-internet/
 ---
 
 ## 🎯 Project Overview
