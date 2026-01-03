@@ -1,0 +1,66 @@
+# Environment variables
+.env
+
+
+data/stage1/
+data/stage2/
+data/stage3_splits/
+data/pipeline_state.json
+
+# Model checkpoints (large files - download separately)
+models/
+
+data/stage3_splits/split_stats.json
+
+# Inference outputs
+inference_audit.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Lock files (optional - uncomment to ignore)
+# uv.lock
+
+
+# .env.example (Do not ignore this, it is needed for public repo)

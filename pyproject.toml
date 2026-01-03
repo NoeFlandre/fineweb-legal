@@ -1,0 +1,51 @@
+[project]
+name = "fineweb-legal"
+version = "0.1.0"
+description = "FineWeb-Legal annotation pipeline - creating legal value scores for web documents using Mistral-Medium"
+readme = "README.md"
+authors = [
+    { name = "NoeFlandre", email = "noeflandre@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "typer[all]>=0.12.0",
+    "rich>=13.7.0",
+    "datasets>=2.18.0",
+    "mistralai>=1.0.0",
+    "pyarrow>=15.0.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+    "tenacity>=8.2.0",
+    "python-dotenv>=1.0.0",
+    # Phase 2: Classifier training
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "scikit-learn>=1.4.0",
+    "tensorboard>=2.15.0",
+    "accelerate>=0.28.0",
+]
+
+[project.scripts]
+fineweb-legal = "fineweb_legal.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
