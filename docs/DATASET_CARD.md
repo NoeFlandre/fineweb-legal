@@ -65,11 +65,11 @@ You can load the full dataset (default) or one of the specialized high-quality s
 
 ### Configurations
 
-| Config | Min Score | Train | Test | Total | Avg Score |
-|--------|-----------|-------|------|-------|-----------|
-| `default` | ≥ 3.0 | 46,918 | 5,214 | **52,132** | 4.21 |
-| `high_quality` | ≥ 4.0 | 29,101 | 3,234 | **32,335** | 4.60 |
-| `supreme` | ≥ 4.8 | 14,971 | 1,664 | **16,635** | 4.98 |
+| Config | Min Score | Train (docs) | Test (docs) | Total Docs | Total Words | Avg Score |
+|--------|-----------|--------------|-------------|------------|-------------|-----------|
+| `default` | ≥ 3.0 | 46,918 | 5,214 | **52,132** | **66.9M** | 4.21 |
+| `high_quality` | ≥ 4.0 | 29,101 | 3,234 | **32,335** | **46.9M** | 4.60 |
+| `supreme` | ≥ 4.8 | 14,971 | 1,664 | **16,635** | **29.4M** | 4.98 |
 
 *   `default`: All identified legal documents. Broadest coverage.
 *   `high_quality`: Strong legal content. Case law, statutes, contracts.
