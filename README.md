@@ -6,7 +6,7 @@
 
 This project represents the **first version** of the FineWeb-Legal initiative. It validates our methodology by filtering the 10-billion-token (`sample-10BT`) subset of FineWeb, producing a highly curated dataset of legal documents.
 
-**[📄 Technical Report](docs/TECHNICAL_REPORT.md)** • **[🤗 Dataset Card](docs/DATASET_CARD.md)** • **[Blog](https://noeflandre.bearblog.dev/i-made-a-legal-dataset-and-put-it-on-the-internet/)** • **[🤗 Dataset](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot)**
+**[📄 Technical Report](docs/TECHNICAL_REPORT.md)** • **[Blog](https://noeflandre.bearblog.dev/i-made-a-legal-dataset-and-put-it-on-the-internet/)** • **[🤗 Dataset](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot)**
 
 ---
 
