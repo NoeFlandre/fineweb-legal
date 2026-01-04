@@ -4,7 +4,7 @@ language:
 license: mit
 task_categories:
 - text-classification
-- text-scoring
+- text-classification
 tags:
 - legal
 - fineweb

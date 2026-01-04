@@ -55,7 +55,8 @@ This pilot release serves as a validation step before scaling the pipeline to th
 
 Along with the dataset, we are releasing the **legal classifier model** used for filtering, as well as the training code and annotation pipeline:
 
-*   **Dataset**: This repo (`fineweb-legal-pilot`)
+*   **Dataset (Filtered)**: This repo (`fineweb-legal-pilot`)
+*   **Dataset (Annotations)**: [NoeFlandre/fineweb-legal-annotations](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-annotations)
 *   **Classifier**: [HuggingFaceFW/fineweb-legal-classifier](https://huggingface.co/NoeFlandre/fineweb-legal-classifier) 
 *   **Code**: [GitHub Repository](https://github.com/NoeFlandre/fineweb-legal)
 

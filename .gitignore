@@ -7,7 +7,6 @@ data/
 # Model checkpoints (large files - download separately)
 models/
 
-data/stage3_splits/split_stats.json
 
 # Inference outputs
 inference_audit.csv
