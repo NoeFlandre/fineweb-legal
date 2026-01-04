@@ -63,6 +63,40 @@ print(f"Legal Quality Score: {score:.2f} / 5.0")
 - **Batch Size**: 32 (Effective)
 - **Learning Rate**: 3e-4
 
+## Ablation Studies
+
+We conducted extensive ablation studies to identify optimal hyperparameters for V2 training:
+
+### Sequence Length Impact
+| Context Window | Best Macro F1 | Notes |
+|:---|:---|:---|
+| 512 | 0.5797 | ❌ Too short |
+| 1024 | 0.6645 | Baseline |
+| **2048** | **0.6715** | **✅ Winner (+1.05%)** |
+
+### Learning Rate Sweep
+| LR | Best Macro F1 |
+|:---|:---|
+| 1e-4 | 0.6548 |
+| 2e-4 | 0.6645 |
+| **5e-4** | **0.6655** |
+| 1e-3 | 0.6644 |
+
+### LoRA Rank Analysis
+| Rank | Best Macro F1 |
+|:---|:---|
+| 8 | 0.6406 |
+| **16** | **0.6645** |
+| 32 | 0.6645 |
+
+**Conclusion**: Optimal config for V2 is **Seq=2048, LR=3e-4, Rank=16, Class Weights=Enabled**.
+
+## Related Artifacts
+
+- **Filtered Dataset**: [FineWeb-Legal-Pilot](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot)
+- **Raw Annotations**: [FineWeb-Legal-Annotations](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-annotations)
+- **Code & Ablations**: [GitHub Repository](https://github.com/NoeFlandre/fineweb-legal)
+
 ## License
 
 MIT License.
