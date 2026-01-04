@@ -12,7 +12,14 @@
 
 This report documents the development and training of **FineWeb-Legal-Pilot**, a proof-of-concept dataset identifying high-quality legal content within the FineWeb `sample-10BT` subset. The project successfully achieved **97.99% Binary F1@3** and produced a pilot dataset of **52,132 documents**, paving the way for scaling to the full 44TB FineWeb corpus.
 
----
+### 1.4 Artifacts Released
+
+| Artifact | Link |
+|----------|------|
+| **Dataset (Filtered)** | [NoeFlandre/fineweb-legal-pilot](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot) |
+| **Dataset (Annotations)** | [NoeFlandre/fineweb-legal-annotations](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-annotations) |
+| **Classifier** | [HuggingFaceFW/fineweb-legal-classifier](https://huggingface.co/NoeFlandre/fineweb-legal-classifier) |
+| **Code** | [GitHub Repository](https://github.com/NoeFlandre/fineweb-legal) |
 
 ## 1. Introduction
 
