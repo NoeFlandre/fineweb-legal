@@ -9,93 +9,112 @@ tags:
 - gemma
 - lora
 - fineweb
+- ablation-study
 base_model: google/embeddinggemma-300m
-pipeline_tag: text-classification
-widget:
-- text: "The Supreme Court of the United States held that the First Amendment protects..."
-- text: "Cookie Policy: We use cookies to improve your experience."
 ---
 
-# ⚖️ FineWeb-Legal-Classifier
+# ⚖️ FineWeb-Legal Ablation Studies
 
 <center>
     <img src="https://raw.githubusercontent.com/NoeFlandre/fineweb-legal/main/assets/logo.png" alt="FineWeb-Legal Logo" width="400"/>
 </center>
 
-**FineWeb-Legal-Classifier** is a lightweight (300M parameter) model designed to identify high-quality legal content from web crawls. It was trained to filter the [FineWeb-Legal-Pilot](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot) dataset.
+This repository contains **ablation study results** for the FineWeb-Legal classifier project. We systematically tested hyperparameters to identify the optimal configuration for legal document classification.
 
-## Model Description
-
-- **Base Model**: `google/embeddinggemma-300m`
-- **Architecture**: PEFT LoRA Adapter + Linear Classification Head
-- **Task**: Regression (Score 0.0 - 5.0) converted to classes
-- **Training Data**: 6,500 FineWeb samples annotated by Mistral-Medium
-
-## Performance
-
-| Metric | Score |
-|--------|-------|
-| **Binary F1 (@3.0)** | **97.99%** |
-| Validation Acc | 88.8% |
-| Macro F1 | 0.857 |
-
-## Usage
-
-```python
-import torch
-from components.model import LegalClassifier # From our repo
-
-# Load Model
-model = LegalClassifier.from_pretrained("NoeFlandre/fineweb-legal-classifier")
-model.eval()
-
-# Score Text
-text = "The plaintiff filed a motion for summary judgment..."
-score = model.predict(text)
-print(f"Legal Quality Score: {score:.2f} / 5.0")
-```
-
-## Training Details
-
-- **LoRA Rank**: 16
-- **LoRA Alpha**: 32
-- **Epochs**: 4 (Early Stopped)
-- **Batch Size**: 32 (Effective)
-- **Learning Rate**: 3e-4
-
-## Ablation Studies
-
-We conducted extensive ablation studies to identify optimal hyperparameters for V2 training:
+## 📊 Ablation Results
 
 ### Sequence Length Impact
-| Context Window | Best Macro F1 | Notes |
+Legal documents are long. We tested context windows from 512 to 2048 tokens.
+
+| Context Window | Best Macro F1 | Impact |
 |:---|:---|:---|
-| 512 | 0.5797 | ❌ Too short |
+| 512 | 0.5797 | ❌ Too short (loss of context) |
 | 1024 | 0.6645 | Baseline |
 | **2048** | **0.6715** | **✅ Winner (+1.05%)** |
 
+**Conclusion**: Increasing to **2048 tokens** provides the most significant boost.
+
 ### Learning Rate Sweep
-| LR | Best Macro F1 |
-|:---|:---|
-| 1e-4 | 0.6548 |
-| 2e-4 | 0.6645 |
-| **5e-4** | **0.6655** |
-| 1e-3 | 0.6644 |
+Tested from 1e-4 to 1e-3.
+
+| LR | Best Macro F1 | Notes |
+|:---|:---|:---|
+| 1e-4 | 0.6548 | Underfitting |
+| 2e-4 | 0.6645 | Stable |
+| **5e-4** | **0.6655** | **Best** |
+| 1e-3 | 0.6644 | Diminishing returns |
+
+**Conclusion**: **3e-4 to 5e-4** is optimal.
 
 ### LoRA Rank Analysis
-| Rank | Best Macro F1 |
+Testing adapter capacity.
+
+| Rank | Best Macro F1 | Notes |
+|:---|:---|:---|
+| 8 | 0.6406 | Underfitting |
+| **16** | **0.6645** | **Optimal** |
+| 32 | 0.6645 | No gain, higher VRAM |
+
+**Conclusion**: **Rank 16** is the sweet spot.
+
+### Class Weights
+| Configuration | Best Macro F1 |
 |:---|:---|
-| 8 | 0.6406 |
-| **16** | **0.6645** |
-| 32 | 0.6645 |
+| No Weights | 0.6635 |
+| **With Weights** | **0.6645** |
 
-**Conclusion**: Optimal config for V2 is **Seq=2048, LR=3e-4, Rank=16, Class Weights=Enabled**.
+**Conclusion**: Class weights improve performance on imbalanced data.
 
-## Related Artifacts
+## 🎯 Optimal Configuration
+
+Based on these studies, the recommended V2 configuration is:
+- **Sequence Length**: 2048 tokens
+- **Learning Rate**: 3e-4
+- **LoRA Rank**: 16
+- **Class Weights**: Enabled
+- **Base Model**: `google/embeddinggemma-300m`
+
+## 📁 Repository Structure
+
+```
+ablation_results/
+├── lr_1e-4/          # Learning rate experiments
+├── lr_2e-4/
+├── lr_5e-4/
+├── lr_1e-3/
+├── lora_r8/          # LoRA rank experiments
+├── lora_r16/
+├── lora_r32/
+├── seq_512/          # Sequence length experiments
+├── seq_1024/
+├── seq_2048/
+├── with_weights/     # Class weight experiments
+├── no_weights/
+└── master_summary.json
+```
+
+Each experiment folder contains:
+- `results.json` - Performance metrics
+- `config.json` - Hyperparameters used
+- `model/` - Trained LoRA adapters
+- `confusion_matrix.npy` - Confusion matrix
+- `classification_report.txt` - Detailed metrics
+
+## 🔗 Related Artifacts
 
 - **Filtered Dataset**: [FineWeb-Legal-Pilot](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-pilot)
 - **Raw Annotations**: [FineWeb-Legal-Annotations](https://huggingface.co/datasets/NoeFlandre/fineweb-legal-annotations)
-- **Code & Ablations**: [GitHub Repository](https://github.com/NoeFlandre/fineweb-legal)
+- **Code & Documentation**: [GitHub Repository](https://github.com/NoeFlandre/fineweb-legal)
+
+## 📝 Methodology
+
+All experiments used:
+- **Hardware**: NVIDIA RTX 4090 (24GB VRAM)
+- **Training samples**: 5,000 (stratified)
+- **Validation samples**: 1,000 (stratified)
+- **Base model**: `google/embeddinggemma-300m`
+- **Task**: 6-class legal quality classification (0-5)
+- **Metric**: Macro F1 Score
 
 ## License
 
