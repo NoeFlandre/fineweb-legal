@@ -208,6 +208,56 @@ The stratified split ensures the validation set mirrors the training distributio
 
 ---
 
+### 3.7 Ablation Study & Optimization
+
+Before finalizing the V2 training configuration, we conducted a rapid ablation study on a subset of the data (5,000 train, 1,000 val) to identify the optimal hyperparameters.
+
+**Metrics Tracked:** Macro F1 Score (primary definition of success).
+
+#### 3.7.1 Sequence Length Impact
+Legal documents are often long. We tested increasing the `max_length` from 512 to 2048 tokens.
+
+| Sequence Length | Best Macro F1 | Impact |
+| :--- | :--- | :--- |
+| `512` | 0.5797 | ❌ Too short (loss of context) |
+| `1024` | 0.6645 | Baseline |
+| `2048` | **0.6715** | **✅ Winner (+1.05%)** |
+
+**Conclusion:** Increasing context window to **2048** provides the most significant performance boost, allowing the model to capture more relevant details in long case texts.
+
+#### 3.7.2 Learning Rate Sweep
+We swept learning rates from 1e-4 to 1e-3.
+
+| LR | Best Macro F1 | Notes |
+| :--- | :--- | :--- |
+| `1e-4` | 0.6548 | Underfitting |
+| `2e-4` | 0.6645 | Stable |
+| `5e-4` | **0.6655** | **Best Performance** |
+| `1e-3` | 0.6644 | Diminishing returns |
+
+**Conclusion:** A learning rate of **3e-4 to 5e-4** is optimal. We selected **3e-4** for the final run to ensure stability over longer epochs.
+
+#### 3.7.3 LoRA Rank Analysis
+Testing the capacity of the Low-Rank Adapters.
+
+| Rank (r) | Best Macro F1 | Notes |
+| :--- | :--- | :--- |
+| `8` | 0.6406 | Underfitting |
+| `16` | **0.6645** | **Optimal** |
+| `32` | 0.6645 | No gain, higher VRAM |
+
+**Conclusion:** **Rank 16** is the sweet spot. Rank 8 is insufficient, while Rank 32 adds parameters without performance capability gains.
+
+#### 3.7.4 Class Weights
+| Configuration | Best Macro F1 |
+| :--- | :--- |
+| No Weights | 0.6635 |
+| **With Weights** | **0.6645** |
+
+**Conclusion:** Enabling **Class Weights** provides a slight but consistent improvement, particularly in handling the class imbalance (preventing the model from ignoring rare high-value classes).
+
+---
+
 ## 4. Inference
 
 ### 4.1 Scoring Formula
