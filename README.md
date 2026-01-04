@@ -19,6 +19,7 @@ This project represents the **first version** of the FineWeb-Legal initiative. I
 | **Phase 1** | Pre-filter with heuristics & annotate a subsample using Mistral-Medium LLM (0-5 legal value scores) | ✅ Complete |
 | **Phase 2** | Train a LoRA classifier on Gemma Embedding 300M | ✅ Complete |
 | **Phase 3** | Score the subset 10BT of the FineWeb dataset with the fast classifier | ✅ Complete |
+| **Phase 4** | **Extensive Ablation Studies** (LR, Rank, SeqLen) to optimize for V2 | ✅ Complete |
 
 ### Key Results
 

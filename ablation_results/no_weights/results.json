@@ -1,0 +1,90 @@
+{
+  "config": {
+    "name": "no_weights",
+    "train_samples": 5000,
+    "val_samples": 1000,
+    "max_length": 1024,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "use_class_weights": false,
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.0002,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_every_steps": 50,
+    "seed": 42
+  },
+  "train_stats": {
+    "n_samples": 5000,
+    "label_distribution": {
+      "0": 1888,
+      "4": 1101,
+      "3": 615,
+      "1": 600,
+      "2": 409,
+      "5": 387
+    }
+  },
+  "val_stats": {
+    "n_samples": 1000,
+    "label_distribution": {
+      "0": 408,
+      "4": 212,
+      "3": 107,
+      "1": 99,
+      "2": 89,
+      "5": 85
+    }
+  },
+  "training_history": [
+    {
+      "step": 50,
+      "epoch": 1,
+      "train_loss": 1.239980113506317,
+      "val_loss": 0.6682706863161118,
+      "val_acc": 0.726,
+      "val_f1_macro": 0.58912303911043,
+      "val_f1_binary": 0.8964705882352941
+    },
+    {
+      "step": 100,
+      "epoch": 2,
+      "train_loss": 0.6149887496774847,
+      "val_loss": 0.6039472383166117,
+      "val_acc": 0.746,
+      "val_f1_macro": 0.6558069434052386,
+      "val_f1_binary": 0.9191176470588235
+    },
+    {
+      "step": 150,
+      "epoch": 2,
+      "train_loss": 0.5654970407485962,
+      "val_loss": 0.5656124750773112,
+      "val_acc": 0.759,
+      "val_f1_macro": 0.6635451394557251,
+      "val_f1_binary": 0.9236453201970444
+    }
+  ],
+  "final_metrics": {
+    "loss": 0.5651508967081705,
+    "acc": 0.759,
+    "f1_macro": 0.6640247001601545,
+    "f1_weighted": 0.7558831574689518,
+    "f1_binary": 0.9236453201970444,
+    "f1_per_class": [
+      0.908433734939759,
+      0.4105263157894737,
+      0.44047619047619047,
+      0.6071428571428571,
+      0.8105515587529976,
+      0.8070175438596491
+    ]
+  },
+  "best_f1_macro": 0.6635451394557251,
+  "elapsed_seconds": 467.0802013874054,
+  "samples_per_second": 21.409599401336656,
+  "timestamp": "2026-01-04T15:24:30.627400"
+}
