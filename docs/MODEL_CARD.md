@@ -26,42 +26,42 @@ This repository contains **ablation study results** for the FineWeb-Legal classi
 ### Sequence Length Impact
 Legal documents are long. We tested context windows from 512 to 2048 tokens.
 
-| Context Window | Best Macro F1 | Impact |
-|:---|:---|:---|
-| 512 | 0.5797 | ❌ Too short (loss of context) |
-| 1024 | 0.6645 | Baseline |
-| **2048** | **0.6715** | **✅ Winner (+1.05%)** |
+| Context Window | Macro F1 | Accuracy | Binary F1@3 | Impact |
+|:---|:---|:---|:---|:---|
+| 512 | 0.5797 | 0.606 | 0.8534 | ❌ Too short |
+| 1024 | 0.6645 | 0.721 | 0.9200 | Baseline |
+| **2048** | **0.6715** | **0.742** | **0.9177** | **✅ Winner** |
 
-**Conclusion**: Increasing to **2048 tokens** provides the most significant boost.
+**Conclusion**: Increasing to **2048 tokens** provides the most significant boost (+1.05% Macro F1).
 
 ### Learning Rate Sweep
 Tested from 1e-4 to 1e-3.
 
-| LR | Best Macro F1 | Notes |
-|:---|:---|:---|
-| 1e-4 | 0.6548 | Underfitting |
-| 2e-4 | 0.6645 | Stable |
-| **5e-4** | **0.6655** | **Best** |
-| 1e-3 | 0.6644 | Diminishing returns |
+| LR | Macro F1 | Accuracy | Binary F1@3 | Notes |
+|:---|:---|:---|:---|:---|
+| 1e-4 | 0.6548 | 0.708 | 0.9074 | Underfitting |
+| 2e-4 | 0.6645 | 0.721 | 0.9200 | Stable |
+| **5e-4** | **0.6655** | **0.725** | **0.9200** | **Best** |
+| 1e-3 | 0.6644 | 0.719 | 0.9176 | Diminishing returns |
 
 **Conclusion**: **3e-4 to 5e-4** is optimal.
 
 ### LoRA Rank Analysis
 Testing adapter capacity.
 
-| Rank | Best Macro F1 | Notes |
-|:---|:---|:---|
-| 8 | 0.6406 | Underfitting |
-| **16** | **0.6645** | **Optimal** |
-| 32 | 0.6645 | No gain, higher VRAM |
+| Rank | Macro F1 | Accuracy | Binary F1@3 | Notes |
+|:---|:---|:---|:---|:---|
+| 8 | 0.6406 | 0.688 | 0.9074 | Underfitting |
+| **16** | **0.6645** | **0.721** | **0.9200** | **Optimal** |
+| 32 | 0.6645 | 0.721 | 0.9200 | No gain, higher VRAM |
 
 **Conclusion**: **Rank 16** is the sweet spot.
 
 ### Class Weights
-| Configuration | Best Macro F1 |
-|:---|:---|
-| No Weights | 0.6635 |
-| **With Weights** | **0.6645** |
+| Configuration | Macro F1 | Accuracy | Binary F1@3 |
+|:---|:---|:---|:---|
+| No Weights | 0.6635 | 0.719 | 0.9200 |
+| **With Weights** | **0.6645** | **0.721** | **0.9200** |
 
 **Conclusion**: Class weights improve performance on imbalanced data.
 
