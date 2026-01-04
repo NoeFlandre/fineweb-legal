@@ -1,0 +1,90 @@
+{
+  "config": {
+    "name": "lora_r8",
+    "train_samples": 5000,
+    "val_samples": 1000,
+    "max_length": 1024,
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "use_class_weights": true,
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.0002,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_every_steps": 50,
+    "seed": 42
+  },
+  "train_stats": {
+    "n_samples": 5000,
+    "label_distribution": {
+      "0": 1888,
+      "4": 1101,
+      "3": 615,
+      "1": 600,
+      "2": 409,
+      "5": 387
+    }
+  },
+  "val_stats": {
+    "n_samples": 1000,
+    "label_distribution": {
+      "0": 408,
+      "4": 212,
+      "3": 107,
+      "1": 99,
+      "2": 89,
+      "5": 85
+    }
+  },
+  "training_history": [
+    {
+      "step": 50,
+      "epoch": 1,
+      "train_loss": 1.3926414728164673,
+      "val_loss": 0.8683101918016162,
+      "val_acc": 0.712,
+      "val_f1_macro": 0.6116000581377645,
+      "val_f1_binary": 0.9077669902912622
+    },
+    {
+      "step": 100,
+      "epoch": 2,
+      "train_loss": 0.8090351521968842,
+      "val_loss": 0.7927606361252921,
+      "val_acc": 0.694,
+      "val_f1_macro": 0.6406464119025637,
+      "val_f1_binary": 0.918918918918919
+    },
+    {
+      "step": 150,
+      "epoch": 2,
+      "train_loss": 0.7494960820509328,
+      "val_loss": 0.7645471176457783,
+      "val_acc": 0.696,
+      "val_f1_macro": 0.6352672579944331,
+      "val_f1_binary": 0.9217391304347826
+    }
+  ],
+  "final_metrics": {
+    "loss": 0.7645790751964326,
+    "acc": 0.698,
+    "f1_macro": 0.637713572517766,
+    "f1_weighted": 0.7181734773631823,
+    "f1_binary": 0.9205955334987593,
+    "f1_per_class": [
+      0.8481532147742818,
+      0.41947565543071164,
+      0.4387755102040816,
+      0.5800865800865801,
+      0.7763496143958869,
+      0.7634408602150538
+    ]
+  },
+  "best_f1_macro": 0.6406464119025637,
+  "elapsed_seconds": 466.9418954849243,
+  "samples_per_second": 21.415940819820612,
+  "timestamp": "2026-01-04T14:21:48.452195"
+}

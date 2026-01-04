@@ -1,0 +1,90 @@
+{
+  "config": {
+    "name": "lr_5e-4",
+    "train_samples": 5000,
+    "val_samples": 1000,
+    "max_length": 1024,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "use_class_weights": true,
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.0005,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_every_steps": 50,
+    "seed": 42
+  },
+  "train_stats": {
+    "n_samples": 5000,
+    "label_distribution": {
+      "0": 1888,
+      "4": 1101,
+      "3": 615,
+      "1": 600,
+      "2": 409,
+      "5": 387
+    }
+  },
+  "val_stats": {
+    "n_samples": 1000,
+    "label_distribution": {
+      "0": 408,
+      "4": 212,
+      "3": 107,
+      "1": 99,
+      "2": 89,
+      "5": 85
+    }
+  },
+  "training_history": [
+    {
+      "step": 50,
+      "epoch": 1,
+      "train_loss": 1.2054244589805603,
+      "val_loss": 0.8315203289190928,
+      "val_acc": 0.642,
+      "val_f1_macro": 0.5989178222982214,
+      "val_f1_binary": 0.9159561510353228
+    },
+    {
+      "step": 100,
+      "epoch": 2,
+      "train_loss": 0.6377251026305285,
+      "val_loss": 0.7295122413881241,
+      "val_acc": 0.724,
+      "val_f1_macro": 0.6446444527909573,
+      "val_f1_binary": 0.9095541401273886
+    },
+    {
+      "step": 150,
+      "epoch": 2,
+      "train_loss": 0.5880002042071687,
+      "val_loss": 0.6736367219497287,
+      "val_acc": 0.735,
+      "val_f1_macro": 0.665513788262828,
+      "val_f1_binary": 0.9201995012468828
+    }
+  ],
+  "final_metrics": {
+    "loss": 0.673019510412973,
+    "acc": 0.737,
+    "f1_macro": 0.6681281251923307,
+    "f1_weighted": 0.7487041213679955,
+    "f1_binary": 0.9201995012468828,
+    "f1_per_class": [
+      0.8793774319066148,
+      0.4304932735426009,
+      0.49019607843137253,
+      0.5866666666666667,
+      0.8112244897959183,
+      0.8108108108108109
+    ]
+  },
+  "best_f1_macro": 0.665513788262828,
+  "elapsed_seconds": 471.43680334091187,
+  "samples_per_second": 21.21175082032928,
+  "timestamp": "2026-01-04T14:05:55.869282"
+}

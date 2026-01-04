@@ -5,8 +5,8 @@ from typing import Optional
 
 import torch
 import torch.nn as nn
-from peft import LoraConfig, TaskType, get_peft_model
-from transformers import AutoModel, AutoTokenizer
+from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
+from transformers import AutoModel, AutoTokenizer, BitsAndBytesConfig
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,9 @@ class LegalClassifier(nn.Module):
         lora_alpha: int = 32,
         lora_dropout: float = 0.1,
         use_lora: bool = True,
+        load_in_4bit: bool = False,
+        use_gradient_checkpointing: bool = False,
+        attn_implementation: str = "sdpa",
     ):
         """Initialize the classifier.
         
@@ -46,11 +49,31 @@ class LegalClassifier(nn.Module):
         
         logger.info(f"Loading base model: {self.MODEL_NAME}")
         self.tokenizer = AutoTokenizer.from_pretrained(self.MODEL_NAME)
+        if load_in_4bit:
+            logger.info("Enabling 4-bit quantization")
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=torch.bfloat16,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_use_double_quant=True,
+            )
+        else:
+            bnb_config = None
+
         self.encoder = AutoModel.from_pretrained(
             self.MODEL_NAME,
             torch_dtype=torch.bfloat16,
             trust_remote_code=True,
+            quantization_config=bnb_config,
+            attn_implementation=attn_implementation,
         )
+        
+        if load_in_4bit and use_lora:
+            self.encoder = prepare_model_for_kbit_training(self.encoder)
+        
+        if use_gradient_checkpointing:
+            logger.info("Enabling gradient checkpointing")
+            self.encoder.gradient_checkpointing_enable()
         
         if use_lora:
             logger.info(f"Applying LoRA: r={lora_r}, alpha={lora_alpha}")

@@ -150,11 +150,20 @@ def load_config(**overrides: object) -> AnnotationConfig:
     """Load configuration from environment and apply overrides.
     
     Args:
-        **overrides: Configuration values to override.
+        **overrides: Configuration values to override (these take precedence).
         
     Returns:
         Loaded and validated configuration.
     """
     # Load from env/.env file first
-    config = AnnotationConfig(**overrides)  # type: ignore[arg-type]
-    return config
+    base_config = AnnotationConfig()
+    
+    # Apply overrides explicitly (pydantic-settings doesn't override from kwargs)
+    if overrides:
+        # Filter out None values to avoid overriding with None
+        valid_overrides = {k: v for k, v in overrides.items() if v is not None}
+        config = base_config.model_copy(update=valid_overrides)
+        return config
+    
+    return base_config
+

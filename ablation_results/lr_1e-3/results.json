@@ -1,0 +1,90 @@
+{
+  "config": {
+    "name": "lr_1e-3",
+    "train_samples": 5000,
+    "val_samples": 1000,
+    "max_length": 1024,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "use_class_weights": true,
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.001,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_every_steps": 50,
+    "seed": 42
+  },
+  "train_stats": {
+    "n_samples": 5000,
+    "label_distribution": {
+      "0": 1888,
+      "4": 1101,
+      "3": 615,
+      "1": 600,
+      "2": 409,
+      "5": 387
+    }
+  },
+  "val_stats": {
+    "n_samples": 1000,
+    "label_distribution": {
+      "0": 408,
+      "4": 212,
+      "3": 107,
+      "1": 99,
+      "2": 89,
+      "5": 85
+    }
+  },
+  "training_history": [
+    {
+      "step": 50,
+      "epoch": 1,
+      "train_loss": 1.4537105071544647,
+      "val_loss": 1.0030279774514457,
+      "val_acc": 0.646,
+      "val_f1_macro": 0.5228335966977835,
+      "val_f1_binary": 0.8954545454545455
+    },
+    {
+      "step": 100,
+      "epoch": 2,
+      "train_loss": 0.6758888120001013,
+      "val_loss": 0.7647270446731931,
+      "val_acc": 0.728,
+      "val_f1_macro": 0.6454451779061098,
+      "val_f1_binary": 0.909323116219668
+    },
+    {
+      "step": 150,
+      "epoch": 2,
+      "train_loss": 0.6169405103557639,
+      "val_loss": 0.7031794876333267,
+      "val_acc": 0.738,
+      "val_f1_macro": 0.6644669173473488,
+      "val_f1_binary": 0.9189873417721519
+    }
+  ],
+  "final_metrics": {
+    "loss": 0.7031595960022912,
+    "acc": 0.736,
+    "f1_macro": 0.66158476508115,
+    "f1_weighted": 0.7456445680715967,
+    "f1_binary": 0.9189873417721519,
+    "f1_per_class": [
+      0.8852040816326531,
+      0.4195121951219512,
+      0.48868778280542985,
+      0.5740740740740741,
+      0.8020304568527918,
+      0.8
+    ]
+  },
+  "best_f1_macro": 0.6644669173473488,
+  "elapsed_seconds": 471.06753492355347,
+  "samples_per_second": 21.228378647708837,
+  "timestamp": "2026-01-04T14:13:54.111964"
+}

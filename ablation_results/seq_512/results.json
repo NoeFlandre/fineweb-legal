@@ -1,0 +1,72 @@
+{
+  "config": {
+    "name": "seq_512",
+    "train_samples": 5000,
+    "val_samples": 1000,
+    "max_length": 512,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "use_class_weights": true,
+    "epochs": 2,
+    "batch_size": 128,
+    "lr": 0.0002,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_every_steps": 50,
+    "seed": 42
+  },
+  "train_stats": {
+    "n_samples": 5000,
+    "label_distribution": {
+      "0": 1888,
+      "4": 1101,
+      "3": 615,
+      "1": 600,
+      "2": 409,
+      "5": 387
+    }
+  },
+  "val_stats": {
+    "n_samples": 1000,
+    "label_distribution": {
+      "0": 408,
+      "4": 212,
+      "3": 107,
+      "1": 99,
+      "2": 89,
+      "5": 85
+    }
+  },
+  "training_history": [
+    {
+      "step": 50,
+      "epoch": 2,
+      "train_loss": 0.812657123262232,
+      "val_loss": 0.8212084879004766,
+      "val_acc": 0.656,
+      "val_f1_macro": 0.5797158087064108,
+      "val_f1_binary": 0.9185185185185185
+    }
+  ],
+  "final_metrics": {
+    "loss": 0.7796592702941288,
+    "acc": 0.725,
+    "f1_macro": 0.6331868774942558,
+    "f1_weighted": 0.7320784299323636,
+    "f1_binary": 0.9159561510353228,
+    "f1_per_class": [
+      0.8954081632653061,
+      0.3804347826086957,
+      0.3696682464454976,
+      0.5752212389380531,
+      0.7911547911547911,
+      0.7872340425531915
+    ]
+  },
+  "best_f1_macro": 0.5797158087064108,
+  "elapsed_seconds": 213.6255919933319,
+  "samples_per_second": 46.81087086378742,
+  "timestamp": "2026-01-04T14:41:19.037294"
+}

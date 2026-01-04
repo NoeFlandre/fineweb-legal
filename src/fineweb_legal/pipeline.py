@@ -170,15 +170,31 @@ class AnnotationPipeline:
                 if current_total >= target:
                     break
                 
-                progress.reset(batch_task, total=len(batch_docs))
-                progress.update(batch_task, description=f"Batch {current_batch}")
+                # Filter out duplicates before annotation
+                non_dup_docs = []
+                dup_count = 0
+                for doc in batch_docs:
+                    if self.storage.is_duplicate(doc.text):
+                        dup_count += 1
+                    else:
+                        non_dup_docs.append(doc)
+                
+                if dup_count > 0:
+                    console.print(f"[dim]Batch {current_batch}: Skipped {dup_count} duplicates[/dim]")
+                
+                if not non_dup_docs:
+                    # All duplicates, skip this batch
+                    current_batch += 1
+                    continue
+                
+                progress.reset(batch_task, total=len(non_dup_docs))
                 
                 if dry_run:
                     # Simulate annotation
                     await asyncio.sleep(0.1)
-                    progress.update(batch_task, completed=len(batch_docs))
-                    progress.update(overall_task, advance=len(batch_docs))
-                    console.print(f"[dim]Dry run: would annotate {len(batch_docs)} docs[/dim]")
+                    progress.update(batch_task, completed=len(non_dup_docs))
+                    progress.update(overall_task, advance=len(non_dup_docs))
+                    console.print(f"[dim]Dry run: would annotate {len(non_dup_docs)} docs[/dim]")
                 else:
                     # Real annotation
                     def on_progress(success: bool) -> None:
@@ -187,7 +203,7 @@ class AnnotationPipeline:
                             progress.advance(overall_task)
                     
                     results, errors = await self.annotator.annotate_batch(
-                        batch_docs,
+                        non_dup_docs,
                         on_progress=on_progress,
                     )
                     
@@ -206,6 +222,13 @@ class AnnotationPipeline:
                             self.state.total_tokens_used += r.input_tokens
                         
                         self.storage.save_state(self.state)
+                        
+                        # Update hash registry with new texts
+                        for r in results:
+                            self.storage.add_hash(r.text)
+                        
+                        # Save hash registry periodically (every batch)
+                        self.storage.save_hash_registry()
                         
                         if errors:
                             console.print(

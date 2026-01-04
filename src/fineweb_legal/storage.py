@@ -1,5 +1,6 @@
 """Partitioned Parquet storage with batch-file checkpointing."""
 
+import hashlib
 import json
 import logging
 from datetime import datetime
@@ -29,6 +30,12 @@ ANNOTATION_SCHEMA = pa.schema(
 )
 
 
+def get_text_hash(text: str) -> str:
+    """Compute MD5 hash of normalized text for deduplication."""
+    normalized = text.strip().lower()
+    return hashlib.md5(normalized.encode()).hexdigest()
+
+
 class AnnotationStorage:
     """Manages partitioned Parquet storage with batch-file checkpointing.
     
@@ -37,19 +44,110 @@ class AnnotationStorage:
     batches remain intact.
     """
 
-    def __init__(self, output_dir: Path):
+    def __init__(self, output_dir: Path, curated_dir: Path | None = None):
         """Initialize storage.
         
         Args:
             output_dir: Base output directory.
+            curated_dir: Optional path to curated data with hash registry.
         """
         self.output_dir = output_dir
         self.batches_dir = output_dir / "batches"
         self.state_file = output_dir / "pipeline_state.json"
         
+        # Hash registry for deduplication
+        # Default: look for 'curated' dir in parent of parent (project data dir)
+        if curated_dir is None:
+            # Try to find data/curated relative to output_dir
+            # If output_dir is data/new_annotations, go up to find data/curated
+            candidate = output_dir.parent / "curated"
+            if candidate.exists():
+                curated_dir = candidate
+            else:
+                # Try one more level up (for data/something/output structure)
+                candidate2 = output_dir.parent.parent / "data" / "curated"
+                if candidate2.exists():
+                    curated_dir = candidate2
+                else:
+                    curated_dir = output_dir / "curated"  # fallback to output_dir
+        self.curated_dir = curated_dir
+        self.hash_registry_file = self.curated_dir / "seen_hashes.json"
+        self._seen_hashes: set[str] | None = None  # Lazy loaded
+        
         # Ensure directories exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.batches_dir.mkdir(parents=True, exist_ok=True)
+
+    def load_seen_hashes(self) -> set[str]:
+        """Load hash registry from disk (lazy, cached).
+        
+        Only loads from curated hash registry file, not from batch files.
+        This ensures we don't re-process documents we've already curated.
+        
+        Returns:
+            Set of text hashes that have been annotated.
+        """
+        if self._seen_hashes is not None:
+            return self._seen_hashes
+        
+        self._seen_hashes = set()
+        
+        # Load from curated registry file ONLY
+        if self.hash_registry_file.exists():
+            try:
+                with open(self.hash_registry_file) as f:
+                    data = json.load(f)
+                    self._seen_hashes = set(data.get("hashes", []))
+                    logger.info(f"Loaded {len(self._seen_hashes)} hashes from curated registry")
+            except Exception as e:
+                logger.warning(f"Failed to load hash registry: {e}")
+        
+        logger.info(f"Total seen hashes for dedup: {len(self._seen_hashes)}")
+        
+        logger.info(f"Total seen hashes: {len(self._seen_hashes)}")
+        return self._seen_hashes
+
+    def is_duplicate(self, text: str) -> bool:
+        """Check if text has already been annotated.
+        
+        Args:
+            text: Document text to check.
+            
+        Returns:
+            True if text hash exists in seen_hashes.
+        """
+        seen = self.load_seen_hashes()
+        return get_text_hash(text) in seen
+
+    def add_hash(self, text: str) -> None:
+        """Add text hash to registry after annotation.
+        
+        Args:
+            text: Document text that was annotated.
+        """
+        seen = self.load_seen_hashes()
+        seen.add(get_text_hash(text))
+
+    def save_hash_registry(self) -> None:
+        """Persist hash registry to disk."""
+        if self._seen_hashes is None:
+            return
+        
+        self.curated_dir.mkdir(parents=True, exist_ok=True)
+        
+        registry = {
+            "version": 1,
+            "count": len(self._seen_hashes),
+            "hashes": list(self._seen_hashes),
+        }
+        
+        # Atomic write
+        temp_path = self.hash_registry_file.with_suffix(".json.tmp")
+        with open(temp_path, "w") as f:
+            json.dump(registry, f)
+        temp_path.rename(self.hash_registry_file)
+        
+        logger.info(f"Saved {len(self._seen_hashes)} hashes to registry")
 
     def get_batch_files(self) -> list[Path]:
         """Get all batch files sorted by batch number.

@@ -265,18 +265,57 @@ class FineWebStreamer:
         )
 
     def stream_documents(self, skip: int = 0) -> Iterator[Document]:
-        self._init_dataset()
-        assert self._iterator is not None
+        """Stream documents with automatic reconnection on network errors."""
+        current_skip = skip
+        import time
+        import requests
+        from requests.exceptions import RequestException, ReadTimeout, ConnectionError
+        
+        while True:
+            try:
+                self._init_dataset()
+                assert self._iterator is not None
 
-        skipped = 0
-        for row in self._iterator:
-            if skipped < skip:
-                skipped += 1
-                continue
+                skipped_in_session = 0
+                
+                # Iterate through the dataset
+                # We catch errors during iteration to handle network drops
+                for row in self._iterator:
+                    # Fast-forward to where we left off
+                    if skipped_in_session < current_skip:
+                        skipped_in_session += 1
+                        continue
 
-            doc = self._row_to_document(row)
-            if doc is not None:
-                yield doc
+                    # We have now reached new data
+                    current_skip += 1  # Increment counts for next retry if needed
+                    
+                    doc = self._row_to_document(row)
+                    if doc is not None:
+                        yield doc
+
+                # If loop finishes normally, we are done
+                break
+
+            except (RequestException, ReadTimeout, ConnectionError) as e:
+                logger.warning(f"Stream interrupted at raw index {current_skip}: {e}")
+                logger.warning("Reconnecting in 5 seconds...")
+                
+                # Force re-initialization of dataset
+                self._dataset = None
+                self._iterator = None
+                time.sleep(5)
+                
+            except Exception as e:
+                # Catch generic errors that look like network issues (hf_hub sometimes raises others)
+                err_str = str(e).lower()
+                if "timeout" in err_str or "connection" in err_str or "500" in err_str or "502" in err_str or "503" in err_str:
+                    logger.warning(f"Stream interrupted (generic) at raw index {current_skip}: {e}")
+                    logger.warning("Reconnecting in 5 seconds...")
+                    self._dataset = None
+                    self._iterator = None
+                    time.sleep(5)
+                else:
+                    raise e
 
     def stream_batches(
         self,
@@ -284,9 +323,8 @@ class FineWebStreamer:
         skip_batches: int = 0,
         max_batches: Optional[int] = None,
     ) -> Iterator[list[Document]]:
-        self._init_dataset()
-        assert self._iterator is not None
-
+        # Initialization is handled by stream_documents
+        
         current_batch: list[Document] = []
         batch_count = 0
         skipped_docs = skip_batches * batch_size

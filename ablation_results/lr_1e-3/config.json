@@ -1,0 +1,18 @@
+{
+  "name": "lr_1e-3",
+  "train_samples": 5000,
+  "val_samples": 1000,
+  "max_length": 1024,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "use_class_weights": true,
+  "epochs": 2,
+  "batch_size": 64,
+  "lr": 0.001,
+  "warmup_ratio": 0.1,
+  "weight_decay": 0.01,
+  "max_grad_norm": 1.0,
+  "eval_every_steps": 50,
+  "seed": 42
+}
