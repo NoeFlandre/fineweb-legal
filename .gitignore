@@ -2,10 +2,7 @@
 .env
 
 
-data/stage1/
-data/stage2/
-data/stage3_splits/
-data/pipeline_state.json
+data/
 
 # Model checkpoints (large files - download separately)
 models/
